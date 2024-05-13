@@ -1,0 +1,59 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ocr</title>
+</head>
+<body>
+    <div style="
+    align-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    font-family: cursive;">
+        <h1 style="font-size: 72px;
+        margin-bottom: 23px;">id card ocr</h1>
+        <h2 class="message" style="font-size: 10px;"></h2>
+        <span style="font-size: 30px;">select your file here</span>
+        <input type="file" class="file" style="font-size: 17px;" id="file" name="file" accept="image/png,image/jpeg">
+        <button class="btn">preform ocr</button>
+        <span>image file displayed here:</span>
+        <img src="" alt="" class="image">
+        <span>results</span>
+        <textarea class="text" name="" id="" cols="30" rows="10"></textarea>
+    </div>
+    <script>
+        let api = "apps script api here";
+        let msg = document.querySelector(".message");
+        let file = document.querySelector(".file");
+        let btn = document.querySelector(".btn");
+        let text = document.querySelector(".text");
+        let img = document.querySelector(".image")
+        btn.addEventListener('click',()=>{
+            msg.innerHTML=`loading...`;
+            let fr = new FileReader();
+            fr.readAsDataURL(file.files[0])
+            fr.onload=()=>{
+                let res = fr.result;
+                let b64 = res.split("base64,")[1];
+                fetch(api,{
+                    method:"POST",
+                    body:JSON.stringify({
+                        file:b64,
+                        type:file.files[0].type,
+                        name:file.files[0].name
+                    })
+                })
+                  .then(res => res.text())
+                  .then(data => {
+                    text.innerHTML=data;
+                    img.innerHTML=data;
+                    msg.innerHTML=``;
+                  });
+            }
+        })
+
+    </script>
+</body>
+</html>
